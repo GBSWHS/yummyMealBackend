@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule } from './modules/config/config.module';
 import { SchoolMealModule } from './modules/school-meal/school-meal.module';
 
 @Module({
