@@ -6,6 +6,11 @@ import { format } from 'date-fns';
 import { MealType } from './dto/meal-type.enum';
 import SchoolMealDto from './dto/school-meal.dto';
 import { ConfigService } from '@nestjs/config';
+<<<<<<< Updated upstream
+=======
+import { createCanvas } from 'canvas';
+import { Response } from 'express';
+>>>>>>> Stashed changes
 
 @Injectable()
 export class SchoolMealService {
@@ -52,5 +57,34 @@ export class SchoolMealService {
       calories: mealData.CAL_INFO,
       meals: mealData.DDISH_NM.split('<br/>').map((meal: string) => meal.replace(/\s*\([^)]*\)/g, '').trim()),
     }));
+  }
+
+  async createMealImage(schoolName: string, mealType: MealType, res: Response): Promise<void> {
+    const schoolMeals = await this.getSchoolMeal(schoolName, mealType);
+    
+    const canvas = createCanvas(800, 600);
+    const ctx = canvas.getContext('2d');
+    
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    ctx.fillStyle = '#000000';
+    ctx.font = '30px Arial';
+    ctx.fillText(`Meals for ${schoolName}`, 50, 50);
+
+    let yPosition = 100;
+    schoolMeals.forEach((meal) => {
+      console.log(meal);
+      // ctx.fillText(`${meal.date} - ${meal.type}`, 50, yPosition);
+      yPosition += 40;
+      meal.meals.forEach((dish) => {
+        ctx.fillText(dish, 100, yPosition);
+        yPosition += 30;
+      });
+      yPosition += 20;
+    });
+
+    res.setHeader('Content-Type', 'image/png');
+    canvas.createPNGStream().pipe(res);
   }
 }
