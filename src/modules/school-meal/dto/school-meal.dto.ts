@@ -8,7 +8,7 @@ export default class SchoolMealDto {
 
   @IsEnum(MealType)
   @IsNotEmpty()
-  mealType: MealType;
+  type: MealType;
 
   @IsString()
   @IsNotEmpty()
