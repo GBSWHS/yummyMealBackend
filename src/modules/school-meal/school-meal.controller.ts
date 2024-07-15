@@ -3,6 +3,7 @@ import { SchoolMealService } from './school-meal.service';
 import { MealType } from './dto/meal-type.enum';
 import SchoolMealDto from './dto/school-meal.dto';
 import { Response } from 'express';
+import { Canvas } from 'canvas';
 
 @Controller('school-meal')
 export class SchoolMealController {
@@ -22,6 +23,9 @@ export class SchoolMealController {
     @Query('meal_type') mealType: MealType,
     @Res() res: Response
   ): Promise<void> {
-    await this.schoolMealService.createMealImage(schoolName, mealType, res);
+    const canvas: Canvas = await this.schoolMealService.createMealImage(schoolName, mealType);
+
+    res.setHeader('Content-Type', 'image/png');
+    canvas.createPNGStream().pipe(res);
   }
 }
